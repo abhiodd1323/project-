@@ -59,7 +59,3 @@ A lightweight web app that visualizes live EMG data (from an Arduino + EMG senso
 ## Author
 
 Abhishek R
-
-## License
-
-Specify a license (e.g., MIT) or add one before publishing.
