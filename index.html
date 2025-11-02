@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MindWave - Stress Detection & Relaxation</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- LEFT SECTION: Awareness + Motivational Thoughts -->
+      <div class="left-panel">
+        <h2>Importance of Mental Health 🌿</h2>
+        <p>
+          In today’s fast-paced world, mental health is as important as physical
+          health. Everyday stress from studies, work, or social life can lead to
+          anxiety and burnout. Taking care of your mind helps you stay calm,
+          creative, and truly happy.
+        </p>
+        <p>
+          Regular relaxation, mindfulness, and expressing emotions can reduce
+          stress and improve productivity.
+        </p>
+
+        <div class="thought-box">
+          <h3>💭 Motivational Thought</h3>
+          <p id="thought">
+            "Your calm mind is the ultimate weapon against your challenges."
+          </p>
+          <button id="newThoughtBtn">New Thought</button>
+        </div>
+        <div>
+          <h1>THE RESAERCH PAPER SUMMARY</h1>
+          <p>
+            1. A Comprehensive Analysis of Trapezius Muscle EMG Activity in
+            Relation to Stress and Meditation” Citation: Ahmed M., Grillo M.,
+            Taebi A., Kaya M., Gamage P.A. A Comprehensive Analysis of Trapezius
+            Muscle EMG Activity in Relation to Stress and Meditation.
+            BioMedInformatics. 2024;4(2):1047-1058. link MDPI Aim: To analyse
+            how trapezius muscle EMG signal features differ between rest,
+            stress, and meditation states using frequency-domain and asymmetry
+            features. Key findings: Significant changes were found in EMG
+            characteristics when comparing stress vs meditation vs rest. Both
+            left and right trapezius muscle EMG can indicate these states; low
+            frequency (LF) features were especially effective for distinguishing
+            stress vs meditation. Implications: Excellent fit for your project
+            because it shows that not just EMG amplitude but features within the
+            EMG signal can differentiate mental states. You can reference this
+            to justify using EMG and threshold logic in your app.
+          </p>
+          <p>
+            2. Surface EMG and psychophysiological stress reactions in a
+            real‐life situation” Citation: Rissén D., et al. Surface EMG and
+            psychophysiological stress reactions in a real‐life study. (2000)
+            PubMed; link PubMed Aim: To examine how sEMG activity (of the
+            trapezius muscles) correlates with psychophysiological stress
+            responses (heart rate, cortisol, self-reports) in female employees
+            during actual work. Key findings: Significant correlations were
+            found between higher self‐reported negative stress (feeling
+            tense/exhausted) and increased sEMG activity. No correlation was
+            found with positive feelings or with pain. The study supports that
+            muscle tension (as measured by EMG) is linked to stress in real‐life
+            work settings. Implications: Useful for your project as it shows EMG
+            can reflect stress in everyday settings — supports your assumption
+            that EMG values may indicate stress.
+          </p>
+          <p>
+            3. Experimentally Induced Stress Validated by EMG Activity”
+            Citation: Luijcks R., et al. Experimentally Induced Stress Validated
+            by EMG Activity. (2014) PMC; link PMC Aim: To develop and validate a
+            lab paradigm where uncontrollable/unpredictable stress is induced
+            and validated via EMG activity and other measures. Key findings: EMG
+            recordings from relevant muscles increased under stress induction;
+            thus EMG is a valid indicator of induced psychological stress.
+            Implications: Reinforces the premise that your EMG-based stress
+            monitor is grounded in scientific research — EMG rises when stress
+            is induced.
+          </p>
+        </div>
+      </div>
+
+      <!-- MIDDLE SECTION: Game / Comparison Chart -->
+      <div class="middle-panel">
+        <h2>Stress Level Comparison</h2>
+        <canvas id="comparisonChart"></canvas>
+
+        <div class="game-box">
+          <h3>Mini Relaxation Game 🌸</h3>
+          <p>match your breathing pace</p>
+          <div id="breathingCircle"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT SECTION: Live Graph + Suggestions -->
+      <div class="right-panel">
+        <h2>Live EMG Sensor Data</h2>
+        <canvas id="emgChart"></canvas>
+
+        <div class="controls">
+          <button id="testBtn">Test Without Hardware</button>
+          <button id="connectBtn">Connect to Hardware</button>
+        </div>
+
+        <div class="suggestion-box">
+          <h3>Suggestion 💡</h3>
+          <p id="suggestionText">Waiting for EMG data...</p>
+        </div>
+        <div>
+            <h2>How to Use the EMG Stress Monitor Setup </h2>
+          <p>
+           <p>1. Connect an EMG sensor to your trapezius muscle (shoulder) and Arduino UNO.
+            Ensure your browser is Chrome or Edge for Web Serial support. Launch
+            the App You'll see the live chart, comparison bar, tips, and motivations.</p>
+            <p>2.Test Mode (No Hardware):
+            Click Test Mode to simulate data—watch the graph update every 500ms
+            for 20s. Use Stop Test to pause early.</p>
+            <p> 3.Connect Hardware: Click Connect Arduino—select your port, grant permission, and real EMG
+            data streams in. (Stops any test simulation automatically.) Monitor
+            & Relax: Graph: Tracks EMG values (0-1023); green = calm, yellow =
+            mild stress, red = high. Status: Real-time feedback (e.g., "
+            Calm!").</p>
+            <p>4. Tips/Motivations: Left/right sidebars offer fun advice and
+            mental health nudges. Project Story: Click Why & How for a drop-down
+            on our inspiration.</p>
+          </p>
+        </div>
+        <div>
+          <h2>Why Did We Build This Project?</h2>
+          <p>
+            Mental health is a cornerstone of well-being, yet it affects one in
+            five adults worldwide, often going unnoticed until it builds into
+            something overwhelming. Traditional methods, like journals or
+            surveys, rely on self-reflection, which can be subjective and
+            inconsistent. Inspired by research on trapezius muscle
+            electromyography (EMG)—which detects stress through measurable
+            signal changes, such as low-frequency spikes (p &lt; 0.001)—we
+            created this EMG Stress Monitor to bridge that gap. It's our way of
+            making advanced biofeedback simple, affordable, and approachable,
+            empowering you to tune into your body's signals before stress takes
+            the wheel. We believe small, consistent insights can spark big
+            changes, turning everyday tension into moments of clarity and calm.
+          </p>
+          <h2>How Is It Going to Help?</h2>
+          <p>
+            This tool transforms raw muscle data into actionable, uplifting
+            guidance:Real-Time Awareness: Live charts and thresholds (e.g.,
+            values over 800 flag high stress) let you spot patterns instantly—no
+            guesswork. Personalized Support: Funny tips, motivational thoughts,
+            and breathing prompts make self-care feel light and engaging,
+            reducing anxiety on the spot. Long-Term Growth: Exportable sessions
+            track progress, helping build resilience, better habits, and even
+            prevent burnout. Backed by science, it's like having a pocket
+            wellness coach. Accessibility Boost: Using everyday hardware
+            (Arduino + EMG sensor) and web tech, it's free to try, easy to
+            integrate into routines, and shareable for community support.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
