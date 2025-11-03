@@ -84,11 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Get DOM elements
   const valueDisplay = document.getElementById('currentValue');
-  const emgChartElement = document.getElementById('emgChart');
-  const statusText = document.getElementById('statusText');
-  const suggestionText = document.getElementById('suggestionText');
 
-  if (!valueDisplay || !emgChartElement || !statusText || !suggestionText) {
+  // statusText, suggestionText and emgChart were already queried above;
+  // just ensure the value display and chart exist.
+  if (!valueDisplay || !window.emgChart) {
       console.error('Required elements not found');
       return;
   }
