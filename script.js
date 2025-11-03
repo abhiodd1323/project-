@@ -60,6 +60,11 @@ const emgChart = new Chart(ctxEmg, {
 let running = false;
 let time = 0;
 
+// Add DOM references BEFORE any event listeners that use them
+const statusText = document.getElementById('statusText');
+const connectBtn = document.getElementById('connectBtn');
+const suggestionText = document.getElementById('suggestionText');
+
 function updateGraph() {
   if (!running) return;
   const newValue = Math.floor(Math.random() * 1000);
@@ -94,7 +99,6 @@ document.getElementById("testBtn").addEventListener("dblclick", () => {
   }
 });
 
-// Placeholder for real hardware (later use Serial/WebSerial)
 // --- Arduino connection ---
 let currentPort = null;
 
