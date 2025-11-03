@@ -96,35 +96,38 @@ document.getElementById("testBtn").addEventListener("dblclick", () => {
 
 // Placeholder for real hardware (later use Serial/WebSerial)
 // --- Arduino connection ---
+let currentPort = null;
+
 connectBtn.addEventListener("click", async () => {
-  if (!("serial" in navigator)) {
-    alert("❌ Web Serial API not supported. Use Chrome or Edge browser.");
-    return;
-  }
-
-  try {
-    const port = await navigator.serial.requestPort(); // ask to select Arduino
-    await port.open({ baudRate: 9600 });
-
-    const decoder = new TextDecoderStream();
-    const inputDone = port.readable.pipeTo(decoder.writable);
-    const inputStream = decoder.readable;
-
-    statusText.textContent = "✅ Connected to Arduino UNO";
-
-    for await (const chunk of inputStream) {
-      const lines = chunk.split('\n');
-      for (let line of lines) {
-        const value = parseInt(line.trim());
-        if (!isNaN(value)) {
-          updateChart(value);
-          checkStress(value);
-        }
-      }
+    if (currentPort) {
+        await currentPort.close();
+        currentPort = null;
     }
-  } catch (err) {
-    statusText.textContent = "⚠️ Connection failed: " + err;
-  }
+
+    try {
+        currentPort = await navigator.serial.requestPort();
+        await currentPort.open({ baudRate: 9600 });
+        statusText.textContent = "✅ Connected to Arduino UNO";
+        
+        const decoder = new TextDecoderStream();
+        const inputDone = currentPort.readable.pipeTo(decoder.writable);
+        const inputStream = decoder.readable;
+
+        for await (const chunk of inputStream) {
+          const lines = chunk.split('\n');
+          for (let line of lines) {
+            const value = parseInt(line.trim());
+            if (!isNaN(value)) {
+              updateChart(value);
+              checkStress(value);
+            }
+          }
+        }
+    } catch (err) {
+        statusText.textContent = `⚠️ Connection failed: ${err.message}`;
+        console.error(err);
+        currentPort = null;
+    }
 });
 
 // Add this near the top of your file, with other DOM references
