@@ -79,3 +79,16 @@ button:hover {
     color: #333;
     font-weight: bold;
 }
+
+#currentValue {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+
+#currentValue span {
+  font-size: 28px;
+  font-family: monospace;
+}

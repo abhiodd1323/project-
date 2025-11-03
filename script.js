@@ -82,6 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  // Add this after your DOM references section
+  const valueDisplay = document.createElement('div');
+  valueDisplay.id = 'currentValue';
+  valueDisplay.style.cssText = 'font-size: 24px; font-weight: bold; text-align: center; margin: 10px 0;';
+  document.querySelector('.right-panel').insertBefore(valueDisplay, emgChartElement);
+
   // ---- Simulation / Hardware Connection ----
   let running = false;
   let time = 0;
@@ -96,7 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         window.emgData.labels.shift();
         window.emgData.data.shift();
       }
-      window.emgChart.update('none'); // Instant update for continuity
+      window.emgChart.update('none');
+      
+      // Add this to display current value
+      valueDisplay.innerHTML = `Current EMG Value: <span style="color: ${
+        value > 800 ? '#ff595e' : 
+        value > 400 ? '#ffafcc' : 
+        '#bde0fe'
+      }">${value}</span> mV`;
+      
     } catch (err) {
       console.error('Chart update error:', err);
     }
