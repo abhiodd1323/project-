@@ -1,26 +1,44 @@
 // Hardware connection - continuous streaming with robust disconnect
+let inputDone = null; // Store pipe promise for abort
+
 connectBtn.addEventListener("click", async () => {
-  console.log('Connect/Disconnect button clicked'); // Debug
+  console.log('Connect/Disconnect button clicked'); // Debug (remove later)
+
   if (currentPort && !currentPort.closed) {
     // Disconnect mode
     console.log('Attempting disconnect...'); // Debug
     try {
-      // Stop any ongoing stream
-      if (hardwareStream) {
-        hardwareStream = null; // Break the loop
+      // Abort the pipe to release stream lock
+      if (inputDone && !inputDone.done) {
+        await inputDone.cancel(); // Cancels pipeTo, unlocks streams
+        console.log('Pipe aborted'); // Debug
       }
+
+      // Release locks if active
+      if (currentPort.readable.locked) {
+        currentPort.readable.releaseLock();
+      }
+      if (currentPort.writable && currentPort.writable.locked) {
+        currentPort.writable.releaseLock();
+      }
+
+      // Now safe to close
       await currentPort.close();
       currentPort = null;
+      hardwareStream = null;
+      inputDone = null; // Reset
+
       statusText.textContent = "🔌 Disconnected from Arduino.";
       suggestionText.innerText = "Ready to reconnect.";
       connectBtn.textContent = "🔌 Connect Arduino";
       console.log('Disconnect successful'); // Debug
     } catch (err) {
-      console.error('Disconnect error:', err); // Log the issue
-      // Force cleanup even on error
+      console.error('Disconnect error:', err);
+      // Force reset state even on error
       currentPort = null;
       hardwareStream = null;
-      statusText.textContent = "🔌 Force-disconnected.";
+      inputDone = null;
+      statusText.textContent = "🔌 Force-disconnected (minor issue).";
       suggestionText.innerText = "Ready to reconnect.";
       connectBtn.textContent = "🔌 Connect Arduino";
     }
@@ -43,14 +61,14 @@ connectBtn.addEventListener("click", async () => {
     console.log('Connect successful'); // Debug
 
     const decoder = new TextDecoderStream();
-    currentPort.readable.pipeTo(decoder.writable).catch(err => console.error('PipeTo error:', err));
+    inputDone = currentPort.readable.pipeTo(decoder.writable); // Store for abort
     const inputStream = decoder.readable;
 
-    // Continuous background loop for hardware data
+    // Continuous background loop
     hardwareStream = (async () => {
       try {
         for await (const chunk of inputStream) {
-          if (currentPort.closed || !currentPort.readable || !hardwareStream) break; // Check stream active
+          if (currentPort.closed || !currentPort.readable || !hardwareStream) break;
           const lines = chunk.split('\n').filter(line => line.trim());
           for (let line of lines) {
             const value = parseInt(line.trim());
@@ -66,7 +84,7 @@ connectBtn.addEventListener("click", async () => {
           statusText.textContent = `⚠️ Stream interrupted: ${err.message}`;
         }
       } finally {
-        hardwareStream = null; // Clean up
+        hardwareStream = null;
       }
     })();
 
@@ -74,12 +92,13 @@ connectBtn.addEventListener("click", async () => {
     currentPort.addEventListener('close', () => {
       console.log('Port closed by system'); // Debug
       hardwareStream = null;
+      inputDone = null;
       statusText.textContent = "Port closed (unplugged?).";
       connectBtn.textContent = "🔌 Connect Arduino";
     });
 
   } catch (err) {
-    console.error('Connect error:', err); // Log
+    console.error('Connect error:', err);
     statusText.textContent = `⚠️ Connection failed: ${err.message}`;
     currentPort = null;
     connectBtn.textContent = "🔌 Connect Arduino";
