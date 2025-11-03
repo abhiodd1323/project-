@@ -100,12 +100,10 @@
         <div class="controls">
           <button id="testBtn">Test Without Hardware</button>
           <button id="connectBtn">Connect to Hardware</button>
-          <p id="statusText"></p> <!-- Add this line -->
+          <p id="statusText"></p>
         </div>
-
         <div class="suggestion-box">
-          <h3>Suggestion 💡</h3>
-          <p id="suggestionText">Waiting for EMG data...</p>
+          <p id="suggestionText"></p>
         </div>
         <div>
             <h2>How to Use the EMG Stress Monitor Setup </h2>
@@ -145,7 +143,8 @@
           <h2>How Is It Going to Help?</h2>
           <p>
             This tool transforms raw muscle data into actionable, uplifting
-            guidance:Real-Time Awareness: Live charts and thresholds (e.g.,
+            guidance:Real-Ti            # Run in PowerShell as Administrator
+            Get-CimInstance -ClassName Win32_SerialPort | Select-Object Name, DeviceIDme Awareness: Live charts and thresholds (e.g.,
             values over 800 flag high stress) let you spot patterns instantly—no
             guesswork. Personalized Support: Funny tips, motivational thoughts,
             and breathing prompts make self-care feel light and engaging,

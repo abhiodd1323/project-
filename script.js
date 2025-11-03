@@ -130,6 +130,12 @@ connectBtn.addEventListener("click", async () => {
     }
 });
 
+// Add these DOM references at the top
+const statusText = document.getElementById('statusText');
+const connectBtn = document.getElementById('connectBtn');
+const suggestionText = document.getElementById('suggestionText');
+
+// Move these functions before the connectBtn event listener
 function updateChart(value) {
     emgData.labels.push(time++);
     emgData.data.push(value);
@@ -141,7 +147,6 @@ function updateChart(value) {
 }
 
 function checkStress(value) {
-    const suggestionText = document.getElementById("suggestionText");
     if (value > 800) {
         suggestionText.innerText = "😣 High stress detected! Try deep breathing exercises.";
     } else if (value > 400) {
@@ -150,6 +155,3 @@ function checkStress(value) {
         suggestionText.innerText = "😌 You're in a calm state. Keep it up!";
     }
 }
-
-// Add this near the top of your file, with other DOM references
-const statusText = document.getElementById('statusText');
