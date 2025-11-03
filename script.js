@@ -126,3 +126,6 @@ connectBtn.addEventListener("click", async () => {
     statusText.textContent = "⚠️ Connection failed: " + err;
   }
 });
+
+// Add this near the top of your file, with other DOM references
+const statusText = document.getElementById('statusText');
