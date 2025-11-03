@@ -1,11 +1,11 @@
-// Wait for DOM to load (prevents ReferenceErrors)
+// Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
   // ---- Motivational Thoughts ----
   const thoughts = [
     "You are not your thoughts. You are the awareness behind them.",
-    "Taking a break doesn't mean you're weak — it means you care about your peace.",
+    "Taking a break doesn’t mean you’re weak — it means you care about your peace.",
     "Even on cloudy days, the sun still shines above.",
-    "Progress, not perfection — that's how healing happens.",
+    "Progress, not perfection — that’s how healing happens.",
     "Your calm mind is the ultimate weapon against challenges."
   ];
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (emgChartElement) {
     const ctxEmg = emgChartElement.getContext("2d");
     const emgData = { labels: [], data: [] };
-    window.emgData = emgData; // Global for easy access
+    window.emgData = emgData; // Global for continuous access
     window.emgChart = new Chart(ctxEmg, {
       type: "line",
       data: {
@@ -61,66 +61,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }]
       },
       options: {
-        responsive: true,
+        responsive: true, // Added for smooth resizing
         scales: {
           x: { title: { display: true, text: "Time (s)" } },
           y: { title: { display: true, text: "Signal (mV)" }, min: 0, max: 1000 }
         },
-        animation: { duration: 0 } // No animation for continuous feel
+        animation: { duration: 0 } // Faster updates for continuous feel
       }
     });
   }
 
-  // DOM references (safe checks)
+  // DOM references - safe checks
   const statusText = document.getElementById('statusText');
   const connectBtn = document.getElementById('connectBtn');
   const suggestionText = document.getElementById('suggestionText');
   const testBtn = document.getElementById("testBtn");
 
   if (!statusText || !connectBtn || !suggestionText || !testBtn || !window.emgChart) {
-    console.error('Missing elements or chart. Check HTML IDs.');
+    console.error('Required DOM elements or chart missing. Check your HTML.');
     return;
   }
 
-  // Get DOM elements
-  const valueDisplay = document.getElementById('currentValue');
+  // ---- Simulation / Hardware Connection ----
+  let running = false;
+  let time = 0;
+  let currentPort = null;
+  let hardwareStream = null; // Track hardware loop
 
-  // statusText, suggestionText and emgChart were already queried above;
-  // just ensure the value display and chart exist.
-  if (!valueDisplay || !window.emgChart) {
-      console.error('Required elements not found');
-      return;
-  }
-
-  // Initialize value display
-  valueDisplay.innerHTML = 'Current EMG Value: <span>0</span> mV';
-
-  // Core update function (used by both modes)
+  // Shared update function for both modes (continuous plotting)
   function updateChart(value) {
-    try {
-      // Update chart data
-      window.emgData.labels.push(time++);
-      window.emgData.data.push(value);
-      if (window.emgData.labels.length > 30) {
-        window.emgData.labels.shift();
-        window.emgData.data.shift();
-      }
-      window.emgChart.update('none');
-
-      // Update value display with color coding
-      valueDisplay.innerHTML = `Current EMG Value: <span style="color: ${
-        value > 800 ? '#ff595e' : 
-        value > 400 ? '#ffafcc' : 
-        '#bde0fe'
-      }">${value}</span> mV`;
-
-      // Update stress level message
-      checkStress(value);
-      
-    } catch (err) {
-      console.error('Update error:', err);
-      statusText.textContent = `Error updating display: ${err.message}`;
+    window.emgData.labels.push(time++);
+    window.emgData.data.push(value);
+    if (window.emgData.labels.length > 30) {
+      window.emgData.labels.shift();
+      window.emgData.data.shift();
     }
+    window.emgChart.update('none'); // 'none' for instant continuous updates
   }
 
   function checkStress(value) {
@@ -133,21 +109,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Simulation: Continuous recursive loop
+  // Simulation mode - continuous loop
   function startSimulation() {
     if (running) return;
     running = true;
-    statusText.textContent = "🧪 Simulation running... (Double-click Test to stop)";
+    statusText.textContent = "🧪 Simulation running continuously... (Double-click to stop)";
     
     function simLoop() {
-      if (!running) {
-        running = false;
-        return;
-      }
+      if (!running) return;
       const newValue = Math.floor(Math.random() * 1000);
       updateChart(newValue);
       checkStress(newValue);
-      setTimeout(simLoop, 1000); // Calls itself every 1s – endless until stopped
+      setTimeout(simLoop, 1000); // Recursive for endless loop
     }
     simLoop();
   }
@@ -158,28 +131,30 @@ document.addEventListener('DOMContentLoaded', () => {
   testBtn.addEventListener("dblclick", () => {
     if (running) {
       running = false;
-      suggestionText.innerText = "🛑 Simulation stopped. Click Test to restart!";
+      suggestionText.innerText = "🛑 Simulation stopped. Double-click Test to restart!";
       statusText.textContent = "Simulation paused.";
     }
   });
 
-  // Hardware: Continuous stream with error recovery
+  // Hardware connection - continuous streaming
   connectBtn.addEventListener("click", async () => {
     if (currentPort && !currentPort.closed) {
       // Disconnect
       try {
         await currentPort.close();
+        currentPort = null;
+        if (hardwareStream) {
+          hardwareStream = null; // Stop loop
+        }
+        statusText.textContent = "🔌 Disconnected from Arduino.";
+        suggestionText.innerText = "Ready to reconnect.";
+        connectBtn.textContent = "🔌 Connect Arduino";
       } catch (err) {
         console.error('Disconnect error:', err);
       }
-      currentPort = null;
-      statusText.textContent = "🔌 Disconnected.";
-      suggestionText.innerText = "Ready to reconnect.";
-      connectBtn.textContent = "🔌 Connect Arduino";
       return;
     }
 
-    // Connect
     if (!("serial" in navigator)) {
       alert("❌ Web Serial API not supported. Use Chrome or Edge.");
       return;
@@ -188,20 +163,20 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       currentPort = await navigator.serial.requestPort();
       await currentPort.open({ baudRate: 9600 });
-      statusText.textContent = "✅ Connected – Streaming continuously...";
+      statusText.textContent = "✅ Connected to Arduino - Streaming...";
       connectBtn.textContent = "🔌 Disconnect";
-      suggestionText.innerText = "Live data incoming...";
+      suggestionText.innerText = "Receiving live data...";
 
       const decoder = new TextDecoderStream();
-      currentPort.readable.pipeTo(decoder.writable);
+      const inputDone = currentPort.readable.pipeTo(decoder.writable);
       const inputStream = decoder.readable;
 
-      // Continuous async loop (non-blocking)
-      (async () => {
+      // Continuous background loop for hardware data
+      hardwareStream = (async () => {
         try {
           for await (const chunk of inputStream) {
-            if (currentPort.closed) break;
-            const lines = chunk.split('\n').filter(l => l.trim());
+            if (currentPort.closed || !currentPort.readable) break;
+            const lines = chunk.split('\n').filter(line => line.trim());
             for (let line of lines) {
               const value = parseInt(line.trim());
               if (!isNaN(value)) {
@@ -212,17 +187,23 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         } catch (err) {
           console.error('Stream error:', err);
-          if (!currentPort.closed) {
-            statusText.textContent = `⚠️ Stream paused: ${err.message}. Reconnecting in 5s...`;
-            setTimeout(() => connectBtn.click(), 5000); // Auto-retry
-          }
+          statusText.textContent = `⚠️ Stream interrupted: ${err.message}`;
+        } finally {
+          inputDone.catch(() => {}); // Clean up
         }
       })();
+      
+      // Auto-disconnect on port close
+      currentPort.addEventListener('close', () => {
+        hardwareStream = null;
+        statusText.textContent = "Port closed.";
+      });
 
     } catch (err) {
       statusText.textContent = `⚠️ Connection failed: ${err.message}`;
       console.error(err);
       currentPort = null;
+      connectBtn.textContent = "🔌 Connect Arduino";
     }
   });
 });
