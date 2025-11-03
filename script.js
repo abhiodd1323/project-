@@ -130,5 +130,26 @@ connectBtn.addEventListener("click", async () => {
     }
 });
 
+function updateChart(value) {
+    emgData.labels.push(time++);
+    emgData.data.push(value);
+    if (emgData.labels.length > 30) {
+        emgData.labels.shift();
+        emgData.data.shift();
+    }
+    emgChart.update();
+}
+
+function checkStress(value) {
+    const suggestionText = document.getElementById("suggestionText");
+    if (value > 800) {
+        suggestionText.innerText = "😣 High stress detected! Try deep breathing exercises.";
+    } else if (value > 400) {
+        suggestionText.innerText = "🙂 Moderate stress level. Consider taking a short break.";
+    } else {
+        suggestionText.innerText = "😌 You're in a calm state. Keep it up!";
+    }
+}
+
 // Add this near the top of your file, with other DOM references
 const statusText = document.getElementById('statusText');
