@@ -1,5 +1,7 @@
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded - initializing app'); // Debug: Confirms load
+
   // ---- Motivational Thoughts ----
   const thoughts = [
     "You are not your thoughts. You are the awareness behind them.",
@@ -15,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     newThoughtBtn.addEventListener("click", () => {
       const random = Math.floor(Math.random() * thoughts.length);
       thoughtElement.innerText = thoughts[random];
+      console.log('New thought generated'); // Debug
     });
+  } else {
+    console.error('Motivational elements not found');
   }
 
   // ---- Comparison Chart ----
@@ -40,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+    console.log('Comparison chart created'); // Debug
+  } else {
+    console.error('Comparison chart element not found');
   }
 
   // ---- Live EMG Chart ----
@@ -61,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }]
       },
       options: {
-        responsive: true, // Added for smooth resizing
+        responsive: true,
         scales: {
           x: { title: { display: true, text: "Time (s)" } },
           y: { title: { display: true, text: "Signal (mV)" }, min: 0, max: 1000 }
@@ -69,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
         animation: { duration: 0 } // Faster updates for continuous feel
       }
     });
+    console.log('EMG chart created'); // Debug
+  } else {
+    console.error('EMG chart element not found');
   }
 
   // DOM references - safe checks
@@ -82,6 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  console.log('All elements found - setting up listeners'); // Debug
+
   // ---- Simulation / Hardware Connection ----
   let running = false;
   let time = 0;
@@ -90,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Shared update function for both modes (continuous plotting)
   function updateChart(value) {
+    console.log('Updating chart with value:', value); // Debug
     window.emgData.labels.push(time++);
     window.emgData.data.push(value);
     if (window.emgData.labels.length > 30) {
@@ -100,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function checkStress(value) {
+    console.log('Checking stress for value:', value); // Debug
     if (value > 800) {
       suggestionText.innerText = "😣 High stress detected! Try deep breathing exercises.";
     } else if (value > 400) {
@@ -111,12 +126,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Simulation mode - continuous loop
   function startSimulation() {
-    if (running) return;
+    console.log('Start simulation called'); // Debug
+    if (running) {
+      console.log('Simulation already running');
+      return;
+    }
     running = true;
     statusText.textContent = "🧪 Simulation running continuously... (Double-click to stop)";
     
     function simLoop() {
-      if (!running) return;
+      if (!running) {
+        console.log('Simulation loop stopped');
+        return;
+      }
       const newValue = Math.floor(Math.random() * 1000);
       updateChart(newValue);
       checkStress(newValue);
@@ -129,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Double-click to stop simulation
   testBtn.addEventListener("dblclick", () => {
+    console.log('Double-click detected - stopping simulation'); // Debug
     if (running) {
       running = false;
       suggestionText.innerText = "🛑 Simulation stopped. Double-click Test to restart!";
@@ -138,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Hardware connection - continuous streaming
   connectBtn.addEventListener("click", async () => {
+    console.log('Connect button clicked'); // Debug
     if (currentPort && !currentPort.closed) {
       // Disconnect
       try {
