@@ -114,7 +114,7 @@ connectBtn.addEventListener("click", async () => {
         statusText.textContent = "✅ Connected to Arduino UNO";
         
         const decoder = new TextDecoderStream();
-        const inputDone = currentPort.readable.pipeTo(decoder.writable);
+        currentPort.readable.pipeTo(decoder.writable).catch(err => console.error('PipeTo error:', err));
         const inputStream = decoder.readable;
 
         for await (const chunk of inputStream) {
@@ -134,10 +134,7 @@ connectBtn.addEventListener("click", async () => {
     }
 });
 
-// Add these DOM references at the top
-const statusText = document.getElementById('statusText');
-const connectBtn = document.getElementById('connectBtn');
-const suggestionText = document.getElementById('suggestionText');
+// DOM references already declared above
 
 // Move these functions before the connectBtn event listener
 function updateChart(value) {
