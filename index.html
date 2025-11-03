@@ -95,67 +95,10 @@
       <!-- RIGHT SECTION: Live Graph + Suggestions -->
       <div class="right-panel">
         <h2>Live EMG Sensor Data</h2>
+        <div id="currentValue"></div>
         <canvas id="emgChart"></canvas>
-
-        <div class="controls">
-          <button id="testBtn">Test Without Hardware</button>
-          <button id="connectBtn">Connect to Hardware</button>
-          <p id="statusText"></p>
-        </div>
-        <div class="suggestion-box">
-          <p id="suggestionText"></p>
-        </div>
-        <div>
-            <h2>How to Use the EMG Stress Monitor Setup </h2>
-          <p>
-           <p>1. Connect an EMG sensor to your trapezius muscle (shoulder) and Arduino UNO.
-            Ensure your browser is Chrome or Edge for Web Serial support. Launch
-            the App You'll see the live chart, comparison bar, tips, and motivations.</p>
-            <p>2.Test Mode (No Hardware):
-            Click Test Mode to simulate data—watch the graph update every 500ms
-            for 20s. Use Stop Test to pause early.</p>
-            <p> 3.Connect Hardware: Click Connect Arduino—select your port, grant permission, and real EMG
-            data streams in. (Stops any test simulation automatically.) Monitor
-            & Relax: Graph: Tracks EMG values (0-1023); green = calm, yellow =
-            mild stress, red = high. Status: Real-time feedback (e.g., "
-            Calm!").</p>
-            <p>4. Tips/Motivations: Left/right sidebars offer fun advice and
-            mental health nudges. Project Story: Click Why & How for a drop-down
-            on our inspiration.</p>
-          </p>
-        </div>
-        <div>
-          <h2>Why Did We Build This Project?</h2>
-          <p>
-            Mental health is a cornerstone of well-being, yet it affects one in
-            five adults worldwide, often going unnoticed until it builds into
-            something overwhelming. Traditional methods, like journals or
-            surveys, rely on self-reflection, which can be subjective and
-            inconsistent. Inspired by research on trapezius muscle
-            electromyography (EMG)—which detects stress through measurable
-            signal changes, such as low-frequency spikes (p &lt; 0.001)—we
-            created this EMG Stress Monitor to bridge that gap. It's our way of
-            making advanced biofeedback simple, affordable, and approachable,
-            empowering you to tune into your body's signals before stress takes
-            the wheel. We believe small, consistent insights can spark big
-            changes, turning everyday tension into moments of clarity and calm.
-          </p>
-          <h2>How Is It Going to Help?</h2>
-          <p>
-            This tool transforms raw muscle data into actionable, uplifting
-            guidance:Real-Ti            # Run in PowerShell as Administrator
-            Get-CimInstance -ClassName Win32_SerialPort | Select-Object Name, DeviceIDme Awareness: Live charts and thresholds (e.g.,
-            values over 800 flag high stress) let you spot patterns instantly—no
-            guesswork. Personalized Support: Funny tips, motivational thoughts,
-            and breathing prompts make self-care feel light and engaging,
-            reducing anxiety on the spot. Long-Term Growth: Exportable sessions
-            track progress, helping build resilience, better habits, and even
-            prevent burnout. Backed by science, it's like having a pocket
-            wellness coach. Accessibility Boost: Using everyday hardware
-            (Arduino + EMG sensor) and web tech, it's free to try, easy to
-            integrate into routines, and shareable for community support.
-          </p>
-        </div>
+        <div id="statusText"></div>
+        <div id="suggestionText" class="suggestion-box"></div>
       </div>
     </div>
 

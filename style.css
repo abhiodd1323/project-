@@ -81,14 +81,18 @@ button:hover {
 }
 
 #currentValue {
-  background: #f5f5f5;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 15px 0;
+    text-align: center;
+    font-size: 18px;
 }
 
 #currentValue span {
-  font-size: 28px;
-  font-family: monospace;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: monospace;
+    padding: 0 5px;
 }

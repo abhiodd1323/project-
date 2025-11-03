@@ -82,20 +82,24 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Add this after your DOM references section
-  const valueDisplay = document.createElement('div');
-  valueDisplay.id = 'currentValue';
-  valueDisplay.style.cssText = 'font-size: 24px; font-weight: bold; text-align: center; margin: 10px 0;';
-  document.querySelector('.right-panel').insertBefore(valueDisplay, emgChartElement);
+  // Get DOM elements
+  const valueDisplay = document.getElementById('currentValue');
+  const emgChartElement = document.getElementById('emgChart');
+  const statusText = document.getElementById('statusText');
+  const suggestionText = document.getElementById('suggestionText');
 
-  // ---- Simulation / Hardware Connection ----
-  let running = false;
-  let time = 0;
-  let currentPort = null;
+  if (!valueDisplay || !emgChartElement || !statusText || !suggestionText) {
+      console.error('Required elements not found');
+      return;
+  }
+
+  // Initialize value display
+  valueDisplay.innerHTML = 'Current EMG Value: <span>0</span> mV';
 
   // Core update function (used by both modes)
   function updateChart(value) {
     try {
+      // Update chart data
       window.emgData.labels.push(time++);
       window.emgData.data.push(value);
       if (window.emgData.labels.length > 30) {
@@ -103,16 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
         window.emgData.data.shift();
       }
       window.emgChart.update('none');
-      
-      // Add this to display current value
+
+      // Update value display with color coding
       valueDisplay.innerHTML = `Current EMG Value: <span style="color: ${
         value > 800 ? '#ff595e' : 
         value > 400 ? '#ffafcc' : 
         '#bde0fe'
       }">${value}</span> mV`;
+
+      // Update stress level message
+      checkStress(value);
       
     } catch (err) {
-      console.error('Chart update error:', err);
+      console.error('Update error:', err);
+      statusText.textContent = `Error updating display: ${err.message}`;
     }
   }
 
