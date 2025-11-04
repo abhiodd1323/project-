@@ -92,3 +92,56 @@ button:hover {
     color: #333;
     font-weight: bold;
 }
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column !important; /* Stack panels vertically */
+    padding: 10px; /* Less padding on small screens */
+  }
+  
+  .left-panel, .middle-panel, .right-panel {
+    width: 100% !important; /* Full width on mobile */
+    margin-bottom: 20px; /* Space between stacked panels */
+    padding: 15px; /* Comfortable touch padding */
+  }
+  
+  /* Charts: Smaller height on mobile */
+  #emgChart, #comparisonChart {
+    height: 250px !important; /* Shorter for phones */
+  }
+  
+  /* Text: Easier to read */
+  h2, h3 {
+    font-size: 1.2em; /* Smaller headers */
+  }
+  
+  p {
+    font-size: 0.95em; /* Readable body text */
+    line-height: 1.5; /* More breathing room */
+  }
+  
+  /* Buttons: Bigger for touch */
+  button {
+    padding: 12px 20px; /* Easier to tap */
+    font-size: 1em;
+  }
+  
+  /* Suggestion box: Full width */
+  .suggestion-box {
+    padding: 15px;
+    margin: 10px 0;
+  }
+}
+
+/* General improvements for all devices */
+.container {
+  display: flex; /* Assuming flex layout; adjust if grid */
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left-panel, .middle-panel, .right-panel {
+  flex: 1; /* Equal width on desktop */
+  min-width: 300px; /* Prevent too-narrow on tablets */
+}
