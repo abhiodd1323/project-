@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         responsive: true,
         scales: {
           x: { title: { display: true, text: "Time (s)" } },
-          y: { title: { display: true, text: "Signal (mV)" }, min: 0, max: 1000 }
+          y: { title: { display: true, text: "Signal (mV)" }, min: 0, max: 100 }
         },
         animation: { duration: 0 } // Faster updates for continuous feel
       }
