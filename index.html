@@ -122,6 +122,13 @@
     No PhD required—just an Arduino, sensor, and your browser. The goal? Turn "Ugh, I'm stressed" into "Ah, I'm breathing... and glowing." Small insights lead to big calm—because you deserve tools that feel like a friend, not homework. 🌿
   </p>
 </div>
+<h2>How It Works (Quick Guide)</h2>
+<p><strong> Wiring:</strong> EMG Sensor SIG → Arduino A0, EMG Sensor V+ → Arduino 5V, EMG Sensor GND → Arduino GND. (Optional: Add electrodes to skin for better signal.)</p>
+<p><strong> Upload & Test:</strong> Open Arduino IDE > Paste code > Select board (UNO) & port > Upload. Open Serial Monitor (Tools > Serial Monitor, baud 9600)—you'll see values like "Raw: 512 | Smoothed: 510" every 500ms. Flex your muscle—values spike (e.g., 200-800+).</p>
+<p><strong> Connect to Web App:</strong> In your JS, the for await loop reads these lines via Web Serial. Values plot continuously on the graph; stress check triggers on >400/800.</p>
+<p><strong> Customize:</strong> No Smoothing? Comment out the array/total lines; use Serial.println(rawValue);. Faster Updates? Change UPDATE_INTERVAL to 250 (4Hz). Calibration: Adjust thresholds in JS based on your sensor's baseline (rest ~200-400).</p>
+
+
         </div>
       </div>
     </div>
