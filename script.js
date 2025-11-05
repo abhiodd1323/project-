@@ -116,9 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function checkStress(value) {
     console.log('Checking stress for value:', value); // Debug
-    if (value > 800) {
+    if (value > 70) {
       suggestionText.innerText = "😣 High stress detected! Try deep breathing exercises.";
-    } else if (value > 400) {
+    } else if (value > 35) {
       suggestionText.innerText = "🙂 Moderate stress level. Consider taking a short break.";
     } else {
       suggestionText.innerText = "😌 You're in a calm state. Keep it up!";
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Simulation loop stopped');
         return;
       }
-      const newValue = Math.floor(Math.random() * 1000);
+      const newValue = Math.floor(Math.random() * 100);
       updateChart(newValue);
       checkStress(newValue);
       setTimeout(simLoop, 1000); // Recursive for endless loop
