@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         labels: ["Normal", "Medium Stress", "High Stress"],
         datasets: [{
           label: "EMG Signal Strength (mV)",
-          data: [10, 35, 70],
+          data: [5,10,35],
           backgroundColor: ["#bde0fe", "#ffafcc", "#ff595e"]
         }]
       },
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         responsive: true,
         scales: {
           x: { title: { display: true, text: "Time (s)" } },
-          y: { title: { display: true, text: "Signal (mV)" }, min: 0, max: 100 }
+          y: { title: { display: true, text: "Signal (mV)" }, min: 0, max: 60 }
         },
         animation: { duration: 0 } // Faster updates for continuous feel
       }
@@ -116,9 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function checkStress(value) {
     console.log('Checking stress for value:', value); // Debug
-    if (value > 70) {
+    if (value > 35) {
       suggestionText.innerText = "😣 High stress detected! Try deep breathing exercises.";
-    } else if (value > 35) {
+    } else if (value > 10 && value < 35 ) {
       suggestionText.innerText = "🙂 Moderate stress level. Consider taking a short break.";
     } else {
       suggestionText.innerText = "😌 You're in a calm state. Keep it up!";
